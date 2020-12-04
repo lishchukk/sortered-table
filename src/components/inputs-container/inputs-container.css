@@ -1,0 +1,8 @@
+.inputs-container input {
+    width: 100%;
+}
+.inputs-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

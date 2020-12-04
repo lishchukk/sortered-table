@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+import './add-row.css'
+import InputsContainer from "../inputs-container/inputs-container";
 
-class AddedRow extends Component {
-    constructor(props){
-        super(props)
-    }
+class AddRow extends Component {
 
     state = {
         isAddActive: false,
@@ -14,48 +13,60 @@ class AddedRow extends Component {
         phone: ''
     };
 
+
     onActiveToAdded = () => {
         this.setState({isAddActive: true});
     };
-    onChangeInputValue =  event  => {
+    onChangeInputValue = event => {
         event.preventDefault();
 
         this.setState({
-            [event.name]: event.target.value
+            [event.target.name]: event.target.value
         });
     };
 
+    onSubmitHandller = event => {
+        event.preventDefault();
+        this.setState({
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: ''
+        });
+
+    };
+
+
     render() {
         const {onAddRow} = this.props;
-        const { id, firstName, lastName, email, phone, isAddActive} = this.state;
+        const {id, firstName, lastName, email, phone, isAddActive} = this.state;
+        const newRow = {id, firstName, lastName, email, phone};
+        const enableButton = (!(id !== '' && firstName !== '' && lastName !== '' && email !== '' && phone !== ''));
 
         return (
-            <div className='inputs-container'>
-                <button onClick={() => this.onActiveToAdded()}>Добавить</button>
+            <div>
+                {
+                    !isAddActive
+                        ? <button className='btn btn-outline-secondary'
+                                  onClick={() => this.onActiveToAdded()}>Добавить</button>
+                        : <Fragment>
+                        <form onSubmit={this.onSubmitHandller}>
+                            <InputsContainer {...this.state} onChangeInputValue={this.onChangeInputValue}/>
+                            <button className='btn btn-outline-secondary'
+                                    onClick={() => onAddRow(newRow)} disabled={enableButton}
+                            >
+                                Добавить в таблицу
+                            </button>
+                        </form>
+                        </Fragment>
+                }
 
-                <input type="text" className="form-control" placeholder="Search"
-                       aria-label="Recipient's username" aria-describedby="basic-addon2"
-                       name='id' onChange={this.onChangeInputValue} value={id}/>
-
-                <input type="text" className="form-control" placeholder="Search"
-                       aria-label="Recipient's username" aria-describedby="basic-addon2"
-                       name='firstName' onChange={this.onChangeInputValue} value={firstName}/>
-
-                <input type="text" className="form-control" placeholder="Search"
-                       aria-label="Recipient's username" aria-describedby="basic-addon2"
-                       name='lastName' onChange={this.onChangeInputValue} value={lastName}/>
-
-                <input type="text" className="form-control" placeholder="Search"
-                       aria-label="Recipient's username" aria-describedby="basic-addon2"
-                       name='email' onChange={this.onChangeInputValue} value={email}/>
-
-                <input type="text" className="form-control" placeholder="Search"
-                       aria-label="Recipient's username" aria-describedby="basic-addon2"
-                       name='phone' onChange={this.onChangeInputValue} value={phone}/>
 
             </div>
+
         );
     }
 }
 
-export default AddedRow;
+export default AddRow;
